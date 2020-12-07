@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin to Euro</title>
+    <meta name="description" content="live Bitcoin price in Euro. See the price of 1 Bitcoin in EUR in a simple Bitcoin calculator.">
+    <meta name="keywords" content="bitcoin calculator, bitcoin converter, bitcoin cost, bitcoin exchange rate, bitcoin price, bitcoin rate, bitcoin value, bitcoin worth, bitcoin to eur">
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+        body {
+            overflow: hidden;
+            margin: 0;
+            background-color:#162030;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAE0lEQVQIHWP4//8/AxMDFMiDWQA2wAMhzy0v7QAAAABJRU5ErkJggg==);
+            background-repeat: repeat;
+        }
+        .flex-container {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .row {
+            width: auto;
+        }
+        .flex-item {
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        code, h1{
+        filter:blur(0.3px);
+        color:#7cb4fc;
+        text-shadow:#89d3fd 0 -1px 35px;
+        -webkit-box-shadow:none;
+        -moz-box-shadow:none;
+        box-shadow:none;
+        background-color:transparent;
+        border-style:none;
+        font:400 4rem VT323, monospace;
+        }
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+        }
+        
+        .flex-container:before{
+        content:"";
+        width:100%;
+        height:20%;
+        position:absolute;
+        top:0;
+        left:0;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(40,66,25,0.2)), color-stop(70%,rgba(32,57,17,0)), color-stop(99%,rgba(28,53,13,0)));
+        -webkit-animation:scan 6.5s 1.0s infinite ease-in-out  forwards;
+        -moz-animation:scan 6.5s 1.0s infinite ease-in-out  forwards;
+        -ms-animation:scan 6.5s 1.0s infinite ease-in-out  forwards;
+         -o-animation:scan 6.5s 1.0s infinite ease-in-out  forwards;
+            animation:scan 6.5s 1.0s infinite ease-in-out  forwards;
+        }
+        
+        
+        #cursor:after{
+        content:"\220E";
+        -webkit-animation:cursor .95s ease-in-out infinite;
+        -moz-animation:cursor .95s ease-in-out infinite;
+        -ms-animation:cursor .95s ease-in-out infinite;
+         -o-animation:cursor .95s ease-in-out infinite;
+            animation:cursor .95s ease-in-out infinite;
+        font-size:120%;
+        }
+        
+        /*Animations*/
+        
+        /* Cant' get "Scan" to work in Firefox*/
+        @-webkit-keyframes scan{
+        from { top: -50%;
+        left: 0;
+        }
+        
+        to {
+        top: 150%;
+        left: 0;
+        }
+        }
+        
+        
+        @keyframes scan{
+        from { top: -50%;
+        left: 0;
+        }
+        
+        to {
+        top: 150%;
+        left: 0;
+        }
+        }
+        
+        
+        @-webkit-keyframes cursor{
+        from { opacity: 1.0;
+        }
+        
+        to {
+        opacity: 0.0;
+        }
+        }
+        
+        
+        @-moz-keyframes cursor{
+        from { opacity: 1.0;
+        }
+        
+        to {
+        opacity: 0.0;
+        }
+        }
+        
+        
+        @-ms-keyframes cursor{
+        from { opacity: 1.0;
+        }
+        
+        to {
+        opacity: 0.0;
+        }
+        }
+        
+        
+        @-o-keyframes cursor{
+        from { opacity: 1.0;
+        }
+        
+        to {
+        opacity: 0.0;
+        }
+        }
+        
+        
+        @keyframes cursor{
+        from { opacity: 1.0;
+        }
+        
+        to {
+        opacity: 0.0;
+        }
+        }
+        </style>
+</head>
+<body>
+    <h1>Bitcoin in Euro rechner</h1>
+    <div class="flex-container">
+        <div class="row"> 
+            <div class="flex-item"><code id="cursor">1 BTC = <span id="price"></span></code></div>
+        </div>
+    </div>
+    <script>
+        let socket = new WebSocket("ws://localhost:3000");
+        socket.onopen = function(e) {
+            socket.send("")
+            setInterval(() => {
+                socket.send("")
+            }, 5000);
+        };
+
+        socket.onmessage = function(event) {
+            let price = event.data + "€"
+            let oldPrice = document.getElementById("price").innerText
+
+            if(price !== oldPrice) {
+                var j = 0;
+                var i = 0;
+
+                                
+                function LoopWithTimeOut() {
+                    setTimeout(function() {
+                        document.getElementById("price").innerText = price.substr(0,i)
+                        i++;
+                        if (i <= price.length) {
+                            LoopWithTimeOut(); 
+                        }    
+                    }, 100)
+                }
+                function DeleteLoopWithTimeOut() {
+                    setTimeout(function() {
+                        document.getElementById("price").innerText = oldPrice.substr(0, oldPrice.length - j)
+                        j++;
+                        if (j <= price.length) {
+                            DeleteLoopWithTimeOut(); 
+                        } else  {
+                            LoopWithTimeOut();
+                        }  
+                    }, 100)
+                }
+
+                DeleteLoopWithTimeOut(); 
+            }
+            
+            
+        };
+    </script>
+</body>
+</html>
